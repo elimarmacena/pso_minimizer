@@ -84,6 +84,12 @@ class Particle:
             global_calc = random() * (best_particle.get_y() - self.current_position[1])
             new_speed = (w_value * self.speed_y) + (consts.C1 * local_calc) + (consts.C2 * global_calc)
         # end ELSE
+        if new_speed > consts.MAX_SPEED:
+            new_speed = consts.MAX_SPEED
+            return new_speed
+        if new_speed < consts.MIN_SPEED:
+            new_speed = consts.MIN_SPEED
+            return new_speed 
         return new_speed
     
     '''
@@ -93,5 +99,17 @@ class Particle:
     def location_update(self,is_x):
         if is_x:
             self.current_position[0] += self.speed_x
+            if self.current_position[0] > consts.MAX_POS:
+                self.current_position[0] = consts.MAX_POS
+                self.speed_x = 0
+            if self.current_position[0] < consts.MIN_POS:
+                self.current_position[0] = consts.MIN_POS
+                self.speed_x = 0
         else:
             self.current_position[1] += self.speed_y
+            if self.current_position[1] > consts.MAX_POS:
+                self.current_position[1] = consts.MAX_POS
+                self.speed_y = 0
+            if self.current_position[1] < consts.MIN_POS:
+                self.current_position[1] = consts.MIN_POS
+                self.speed_y = 0
