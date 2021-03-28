@@ -22,9 +22,10 @@ class Swarm:
 
     def __create_initial_population(self):
         counter  = 0;
-        initial_speed = util.create_initial_speed() #initial speed used to the whole swarm
+        initial_speed_x = util.create_initial_speed() #initial speed used to the whole swarm
+        initial_speed_y = util.create_initial_speed() #initial speed used to the whole swarm
         while counter < len(self.population_control):
-            new_particle = Particle(util.create_initial_location(), initial_speed)
+            new_particle = Particle(util.create_initial_location(), initial_speed_x,initial_speed_y)
             self.population_control[counter] = new_particle
             counter += 1
         # end WHILE counter
