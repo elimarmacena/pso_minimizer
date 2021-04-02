@@ -1,4 +1,6 @@
-import common.constants as consts
+import common.constants as const
+import math
+from random import random
 class Particle:
     def __init__(self,position, speed_x,speed_y):
         self.current_position = position # list as representation
@@ -26,10 +28,10 @@ class Particle:
     '''
     def update_particle(self,w_value,best_particle):
         # x updates
-        self.speed_update(w_value, best_particle, True)
+        self.speed_x = self.new_speed_calc(w_value, best_particle, True)
         self.location_update(True)
         # y updates
-        self.speed_update(w_value, best_particle, False)
+        self.speed_y = self.new_speed_calc(w_value, best_particle, False)
         self.location_update(False)
         
         # checking if the new information is the best location that this particle has been
@@ -54,11 +56,11 @@ class Particle:
         y_operation = y + 47
 
         sin1_content = abs( (x/2) + y_operation)
-        sin1 = sin(sqrt(sin1_content))
+        sin1 = math.sin(math.sqrt(sin1_content))
         term1 = -(y_operation) * sin1
         
         sin2_content = abs(x - y_operation)
-        sin2 = sin(sqrt(sin2_content))
+        sin2 = math.sin(math.sqrt(sin2_content))
         term2 = -x * sin2
         final_result = term1 + term2
         return final_result
@@ -71,24 +73,24 @@ class Particle:
             best_particle: Particle with the best global results (best fitness)
             is_x: boolean used as flag to calculate the speed update in the X or Y axis
     '''
-    def speed_update(self, w_value:float, best_particle:Particle, is_x:bool):
+    def new_speed_calc(self, w_value:float, best_particle, is_x:bool):
         # As a bidimencional space, the use of IF ElSE is enough
         new_speed = 0.0
         if is_x:
             local_calc = random() * (self.best_location[0] - self.current_position[0])
             global_calc = random() * (best_particle.get_x() - self.current_position[0])
-            new_speed = (w_value * self.speed_x) + (consts.C1 * local_calc) + (consts.C2 * global_calc)
+            new_speed = (w_value * self.speed_x) + (const.C1 * local_calc) + (const.C2 * global_calc)
         # end IF is_x
         else:
             local_calc = random() * (self.best_location[1] - self.current_position[1])
             global_calc = random() * (best_particle.get_y() - self.current_position[1])
-            new_speed = (w_value * self.speed_y) + (consts.C1 * local_calc) + (consts.C2 * global_calc)
+            new_speed = (w_value * self.speed_y) + (const.C1 * local_calc) + (const.C2 * global_calc)
         # end ELSE
-        if new_speed > consts.MAX_SPEED:
-            new_speed = consts.MAX_SPEED
+        if new_speed > const.MAX_SPEED:
+            new_speed = const.MAX_SPEED
             return new_speed
-        if new_speed < consts.MIN_SPEED:
-            new_speed = consts.MIN_SPEED
+        if new_speed < const.MIN_SPEED:
+            new_speed = const.MIN_SPEED
             return new_speed 
         return new_speed
     
@@ -99,17 +101,20 @@ class Particle:
     def location_update(self,is_x):
         if is_x:
             self.current_position[0] += self.speed_x
-            if self.current_position[0] > consts.MAX_POS:
-                self.current_position[0] = consts.MAX_POS
+            if self.current_position[0] > const.MAX_POS:
+                self.current_position[0] = const.MAX_POS
                 self.speed_x = 0
-            if self.current_position[0] < consts.MIN_POS:
-                self.current_position[0] = consts.MIN_POS
+            if self.current_position[0] < const.MIN_POS:
+                self.current_position[0] = const.MIN_POS
                 self.speed_x = 0
         else:
             self.current_position[1] += self.speed_y
-            if self.current_position[1] > consts.MAX_POS:
-                self.current_position[1] = consts.MAX_POS
+            if self.current_position[1] > const.MAX_POS:
+                self.current_position[1] = const.MAX_POS
                 self.speed_y = 0
-            if self.current_position[1] < consts.MIN_POS:
-                self.current_position[1] = consts.MIN_POS
+            if self.current_position[1] < const.MIN_POS:
+                self.current_position[1] = const.MIN_POS
                 self.speed_y = 0
+
+    def __str__(self):
+        return f'{self.calc_fitness():.4f};{self.current_position[0]:.4f};{self.current_position[1]:.4f}'
