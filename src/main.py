@@ -33,4 +33,5 @@ def main():
     utils.write_execution_tables(execution_history)
     mean_executions = utils.create_mean_executions(execution_history)
     utils.write_execution_file(mean_executions)   
+    utils.plot_mean_executions(mean_executions)
 main()

@@ -2,6 +2,11 @@ import statistics
 import common.constants as const
 from random import random
 from random import seed
+try:
+    from matplotlib import pyplot
+except ModuleNotFoundError:
+    print('matplotlib was not fund. \nPlease, run: \n\t\'pip install matplotlib\' or \'pip3 install matplotlib\' \nto install the library')
+    exit(1)
 
 seed(const.USED_SEED)
 # lambda function to create positive or negative value
@@ -74,3 +79,17 @@ def write_execution_file(dict_execution):
             execution_file.close()
         # end FOR iteration_size
     # end FOR population
+
+def plot_mean_executions(dict_mean):
+    for population in const.POPULATION_SIZE:
+        for iteration_num in const.ITERATION_NUM:
+            axis_x = []
+            axis_y = []
+            for i in range(iteration_num):
+                axis_x.append(i)
+                axis_y.append(dict_mean[population][iteration_num][i])
+            pyplot.plot(axis_x,axis_y,marker='o')
+            pyplot.xlabel("Iteração")
+            pyplot.ylabel("Média Fitness da I-ésima Iteração")
+            pyplot.title(f'População {population}, Num. Iterações {iteration_num}')
+            pyplot.show()
