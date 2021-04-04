@@ -1,3 +1,4 @@
+import statistics
 import common.constants as const
 from random import random
 from random import seed
@@ -45,4 +46,31 @@ def create_mean_executions(dict_bests):
     # end FOR population
     return dict_means
 
-    return 0
+def write_execution_tables(execution_history):
+    table_file = open('./outputs/executions_statisctic.csv','w')
+    table_file.write('population;max_iterations;execution;best_fitness;mean;standard_deviation\n')
+    for iterations in const.ITERATION_NUM:
+        for population in const.POPULATION_SIZE:
+            for execution in range(const.NUM_EXECUTIONS):
+                best_fitness = min(execution_history[execution][iterations][population].values())
+                mean_execution = sum(execution_history[execution][iterations][population].values())/iterations
+                st_dev = statistics.stdev(execution_history[execution][iterations][population].values())
+                line_writer = f'{population};{iterations};{execution};{best_fitness:.4f};{mean_execution:.4f};{st_dev:.4f}\n'
+                table_file.write(line_writer)
+            # end FOR execution
+        # end FOR population
+    # end FOR iterations
+    table_file.close()
+
+def write_execution_file(dict_execution):
+    for population in const.POPULATION_SIZE:
+        for iteration_size in const.ITERATION_NUM:
+            execution_file = open(f'./outputs/executions_population{population}_iterationmax{iteration_size}.csv','w')
+            execution_file.write('iteration;mean_execution\n')
+            for i in range(iteration_size):
+                line_writer = f'{i};{dict_execution[population][iteration_size][i]}\n'
+                execution_file.write(line_writer)
+            # end FOR i
+            execution_file.close()
+        # end FOR iteration_size
+    # end FOR population
